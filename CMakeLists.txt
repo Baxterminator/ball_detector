@@ -16,9 +16,9 @@ find_package(cv_bridge REQUIRED)
 include_directories(include)
 
 # TODO build the node as a library
-add_executable(circle_detector src/circle_detector.cpp include/test_projet/color_detector.hpp src/color_detector.cpp)
+add_executable(circle_detector src/circle_detector.cpp include/ball_detector/color_detector.hpp src/color_detector.cpp)
 
-add_executable(talker src/publisher_member_function.cpp include/test_projet/color_detector.hpp src/color_detector.cpp)
+add_executable(talker src/publisher_member_function.cpp include/ball_detector/color_detector.hpp src/color_detector.cpp)
 ament_target_dependencies(talker rclcpp std_msgs sensor_msgs baxter_core_msgs OpenCV cv_bridge)
 #add_executable(test_exec include/test_projet/color_detector.hpp src/color_detector.cpp src/circle_detector.cpp)
 

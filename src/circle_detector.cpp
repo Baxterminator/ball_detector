@@ -112,9 +112,9 @@ public:
                 //RCLCPP_INFO(this->get_logger(), path_processed);
                 //cv::imwrite(path_processed,im_cv_proccessed);
                 //std::string path_cam = "/home/ecn/ros2/src/test_projet/img/img_"+std::to_string(count)+".jpg";
-                std::string path_cam = "/user/eleves/tcorroenne2021/ros2/src/test_projet/img/img_"+std::to_string(count)+".jpg";
+                //std::string path_cam = "/user/eleves/tcorroenne2021/ros2/src/test_projet/img/img_"+std::to_string(count)+".jpg";
 
-                cv::imwrite(path_cam,im_cv);
+                //cv::imwrite(path_cam,im_cv);
                 count++;
                 std_msgs::msg::Header header;
                 const std::string encoding = "bgr8";
