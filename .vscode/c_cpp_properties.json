@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "${default}",
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "includePath": [
+                "/home/ecn/ros2/install/lab_tricolor/include/**",
+                "/home/ecn/ros2/install/image_orchestra/include/**",
+                "/opt/ecn/ros2/install/map_simulator/include/**",
+                "/opt/ecn/ros2/install/baxter_maintenance_msgs/include/**",
+                "/opt/ecn/ros2/install/baxter_core_msgs/include/**",
+                "/opt/ecn/ros2/install/anchor_msgs/include/**",
+                "/opt/ros/foxy/include/**",
+                "/home/ecn/ros2/src/Image-Composer/include/**",
+                "/home/ecn/ros2/src/Lab_Tricolor/include/**",
+                "/home/ecn/ros2/src/ball_detector/include/**",
+                "/home/ecn/ros2/src/cpp_pubsub/include/**",
+                "/home/ecn/ros2/src/create_display_marker/include/**",
+                "/usr/include/**",
+                "/usr/lib/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "c++14",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}

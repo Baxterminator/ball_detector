@@ -1,3 +1,6 @@
 /*.user
 /.user
 right_cam_model.txt
+build
+.cache
+

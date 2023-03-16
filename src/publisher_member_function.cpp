@@ -19,7 +19,7 @@
 #include "std_msgs/msg/string.hpp"
 #include <algorithm>
 #include <geometry_msgs/msg/twist.hpp>
-#include <test_projet/color_detector.hpp>
+#include <ball_detector/color_detector.hpp>
 #include <opencv2/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/xphoto/white_balance.hpp>

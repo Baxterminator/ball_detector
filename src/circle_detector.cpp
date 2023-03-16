@@ -38,7 +38,8 @@ public:
     {
         // init whatever is needed for your node
         //init color
-        color = declare_parameter<char>("color", 'r');
+        this->declare_parameter<char>("color", 'r');
+        color = this->get_parameter("color").get_parameter_value().get<char>();
         if (color=='r'){
             cd.detectColor(91,30,30);  //detect red (r,g,b) (143,11,14)
             cd.showSegmentation();
@@ -51,8 +52,8 @@ public:
             }
         }
         //init side
-        right = declare_parameter<bool>("right", true);
-        string side = (right) ? "right" : "left";  //if right==true: side=right; else: side=left
+        this->declare_parameter<string>("side", "left");
+        side = this->get_parameter("side").get_parameter_value().get<std::string>();
         topic_sub_img = "/cameras/"+side+"_hand_camera/image";
         topic_sub_cam_param = "/cameras/"+side+"_hand_camera/camera_info";
 
@@ -130,7 +131,7 @@ public:
       
         // init timer 143- the function will be called with the given rate
         publish_timer = create_wall_timer(1000ms,    // rate
-                                          [&](){read_image();});
+                                          [&](){pub_image();});
 
     }   
 //    CircleDetectorNode(rclcpp::NodeOptions options) : Node("test_node", options)
@@ -147,10 +148,10 @@ private:
     int count = 0;
     bool right;
     char color;
-
-    ;
+    string side;
 
     rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr publisher;
+    string topic_pub_circle = "robot/"+side+"_circle";
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_img;
     std_msgs::msg::Float32MultiArray circle;
     rclcpp::TimerBase::SharedPtr publish_timer;
@@ -160,7 +161,7 @@ private:
     cv::Mat im_cv;   //used to store the image and process it
     ColorDetector cd;//=ColorDetector(143,11,14);
 
-    void read_image()
+    void pub_image()
     {
         // use last_msg to build and publish command
         RCLCPP_INFO(this->get_logger(), "publish: '%s'");
