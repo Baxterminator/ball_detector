@@ -14,7 +14,7 @@ struct CamParam
     CamParam() {}
     // init from classical parameters
     CamParam(double _px, double _py, double _u0, double _v0):
-        u0(_u0), v0(_v0), px(_px), py(_py), ipx(1./_px), ipy(1./_py)
+        ipx(1./_px), ipy(1./_py), u0(_u0), v0(_v0), px(_px), py(_py)
     {}
 
     // init from resolution and view angle

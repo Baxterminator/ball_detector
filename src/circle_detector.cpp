@@ -125,7 +125,7 @@ public:
             });
 
             // INIT PUBLISHERS
-        publisher = create_publisher<std_msgs::msg::Float32MultiArray>("circle_", 10);   // topic + QoS
+        publisher = create_publisher<std_msgs::msg::Float32MultiArray>("/robot/"+side+"_circle", 10);   // topic + QoS
         publisher_img = create_publisher<sensor_msgs::msg::Image>("robot/xdisplay", 10);   // topic + QoS
       
             // INIT TIMER      143- the function will be called with the given rate
