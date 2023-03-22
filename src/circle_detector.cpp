@@ -12,9 +12,9 @@
 #include <std_msgs/msg/multi_array_layout.hpp>
 #include <std_msgs/msg/multi_array_dimension.hpp>
 #include <string>
-#include <baxter_core_msgs/msg/camera_settings.hpp>
+#include "baxter_core_msgs/msg/camera_settings.hpp"
 #include <sensor_msgs/msg/camera_info.hpp>
-#include <opencv2/xphoto/white_balance.hpp>
+//#include <opencv2/xphoto/white_balance.hpp>
 
 
 
@@ -51,25 +51,24 @@ public:
                 //cd.setSaturationValue(50,200);  //value determined on real test
             }
         }
-        //init side
+
+            // INIT SIDE AND TOPIC
         this->declare_parameter<string>("side", "left");
         side = this->get_parameter("side").get_parameter_value().get<std::string>();
         topic_sub_img = "/cameras/"+side+"_hand_camera/image";
         topic_sub_cam_param = "/cameras/"+side+"_hand_camera/camera_info";
 
-        //int fov = 60;
-        //cd.setCamera(640,400,fov);
-
+            // INIT CAMERA PARAMETERS :
         std::vector<float> K_right =  {404.378473294, 0.0, 643.580188086, 0.0, 404.378473294, 396.392557487, 0.0, 0.0, 1.0};
         std::vector<float> K_left = {403.329926796, 0.0, 656.042542988, 0.0, 403.329926796, 408.450436661, 0.0, 0.0, 1.0};
-        std::vector<float> K = (right) ? K_right : K_left;
+        std::vector<float> K = (side=="right") ? K_right : K_left;
         auto px=K[0];
         auto py = K[4];
         auto u0=K[2];
         auto v0 = K[5];
         cd.setCamera(px,py,u0,v0);
 
-        // init subscribers
+            // INIT SUBSCRIBERS
         subscriber_cam_param = create_subscription<sensor_msgs::msg::CameraInfo>(
             topic_sub_cam_param,    // which topic143
             1,         // QoS
@@ -90,7 +89,7 @@ public:
         });
         subscriber = create_subscription<sensor_msgs::msg::Image>(
             topic_sub_img,    // which topic
-            100,         // QoS
+            1,         // QoS
             [this](sensor_msgs::msg::Image::UniquePtr msg)    // callback are perfect for lambdas
             {
                 last_image = *msg;
@@ -99,7 +98,7 @@ public:
                 im_init=true;
                 im_cv = cv_bridge::toCvCopy(last_image, "bgr8")->image;
                 cv::Mat im_white;
-                cv::Ptr<cv::xphoto::WhiteBalancer> wb = cv::xphoto::createSimpleWB();
+                //cv::Ptr<cv::xphoto::WhiteBalancer> wb = cv::xphoto::createSimpleWB();
                 //wb->balanceWhite(im_cv,im_white);
                 im_white = im_cv;
                 cv::Mat im_cv_proccessed;
@@ -125,11 +124,11 @@ public:
                 publisher_img->publish(message);
             });
 
-        // init publishers
+            // INIT PUBLISHERS
         publisher = create_publisher<std_msgs::msg::Float32MultiArray>("circle_", 10);   // topic + QoS
         publisher_img = create_publisher<sensor_msgs::msg::Image>("robot/xdisplay", 10);   // topic + QoS
       
-        // init timer 143- the function will be called with the given rate
+            // INIT TIMER      143- the function will be called with the given rate
         publish_timer = create_wall_timer(1000ms,    // rate
                                           [&](){pub_image();});
 
@@ -146,7 +145,6 @@ private:
     bool im_init=false;
     bool seg=false;
     int count = 0;
-    bool right;
     char color;
     string side;
 
@@ -164,7 +162,7 @@ private:
     void pub_image()
     {
         // use last_msg to build and publish command
-        RCLCPP_INFO(this->get_logger(), "publish: '%s'");
+        RCLCPP_INFO(this->get_logger(), "publish:");
         std::cout<<"publish"<<" _ ";
         if (im_init){
             //cd.findMainContour(im_cv);
