@@ -4,6 +4,7 @@ project(ball_detector)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -16,7 +17,7 @@ ament_auto_find_build_dependencies()
 
 
 # TODO build the node as a library
-ament_auto_add_executable(circle_detector src/circle_detector.cpp)
+ament_auto_add_executable(circle_detector src/circle_detector.cpp src/color_detector.cpp)
 target_include_directories(circle_detector PRIVATE ${OpenCV_INCLUDE_DIRS} include)
 
 #add_executable(circle_detector src/circle_detector.cpp include/ball_detector/color_detector.hpp src/color_detector.cpp)
@@ -24,17 +25,6 @@ target_include_directories(circle_detector PRIVATE ${OpenCV_INCLUDE_DIRS} includ
 #add_executable(talker src/publisher_member_function.cpp include/ball_detector/color_detector.hpp src/color_detector.cpp)
 #ament_target_dependencies(talker rclcpp std_msgs sensor_msgs baxter_core_msgs OpenCV cv_bridge)
 #add_executable(test_exec include/test_projet/color_detector.hpp src/color_detector.cpp src/circle_detector.cpp)
-
-# TODO include non-ROS2 directories (OpenCV, Yaml-cpp, etc.)
-#target_include_directories(circle_detector PRIVATE ${OpenCV_INCLUDE_DIRS} include)
-
-# TODO link your node to its ROS 2 dependencies
-# ament_target_dependencies(circle_detector
-#   rclcpp
-#   std_msgs 
-#   baxter_core_msgs
-#   OpenCV
-#   cv_bridge)
   
 # TODO let ament create an executable from your node
 #rclcpp_components_register_node(circle_detector
@@ -53,4 +43,4 @@ target_include_directories(circle_detector PRIVATE ${OpenCV_INCLUDE_DIRS} includ
 
 # register node
 # ament_export_libraries(circle_detector)
-ament_package()
+ament_auto_package()
