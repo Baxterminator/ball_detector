@@ -118,7 +118,7 @@ std::vector<cv::Point> ColorDetector::findMainContour(const cv::Mat &_im)
         }
         else
         {
-            std::cout << "Color detector: No object was found\n";
+            //std::cout << "Color detector: No object was found\n";
         }
     }
     else
@@ -153,13 +153,13 @@ bool ColorDetector::process(const cv::Mat &_im, cv::Mat &_im_processed, bool wri
         cv::Point2f pt;float radius;
         cv::minEnclosingCircle(contour, pt, radius);
 
-        std::cout << "Found radius: " << radius << std::endl;
+        //std::cout << "Found radius: " << radius << std::endl;
 
         // filter output
         x_ = .5*(x_ + pt.x);
         y_ = .5*(y_ + pt.y);
         area_ = .5*(area_ + radius*radius*M_PI);
-
+        std::cout<<"in color:"<<std::endl<<"x:"<<x_<<" y:"<<y_<<" area:"<<area_<<std::endl;
         // write if needed
         if(show_output_ || write_output)
         {

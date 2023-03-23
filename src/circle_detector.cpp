@@ -77,14 +77,15 @@ public:
                 //    [fx  0 cx]   [px 0  u0]
                 //K = [ 0 fy cy] = [0  py v0]
                 //    [ 0  0  1]   [0  0  1 ]
-                RCLCPP_INFO(this->get_logger(), "camera set!");
+                RCLCPP_INFO_ONCE(this->get_logger(), "camera set!");
                 //std::vector<float> K =  {404.378473294, 0.0, 643.580188086, 0.0, 404.378473294, 396.392557487, 0.0, 0.0, 1.0};
 
                 auto K = msg->k;
+                auto roi = msg->roi;
                 auto px=K[0];
                 auto py = K[4];
-                auto u0=K[2];
-                auto v0 = K[5];
+                double u0 = roi.x_offset;
+                double v0 = roi.y_offset;
                 cd.setCamera(px,py,u0,v0);
         });
         subscriber = create_subscription<sensor_msgs::msg::Image>(
@@ -93,35 +94,8 @@ public:
             [this](sensor_msgs::msg::Image::UniquePtr msg)    // callback are perfect for lambdas
             {
                 last_image = *msg;
-                //std::cout<<im_init<<" _ ";
-                //RCLCPP_INFO(this->get_logger(), "getting: '%s'");
                 im_init=true;
                 im_cv = cv_bridge::toCvCopy(last_image, "bgr8")->image;
-                cv::Mat im_white;
-                //cv::Ptr<cv::xphoto::WhiteBalancer> wb = cv::xphoto::createSimpleWB();
-                //wb->balanceWhite(im_cv,im_white);
-                im_white = im_cv;
-                cv::Mat im_cv_proccessed;
-                cd.fitCircle();
-                cd.showOutput();
-                cd.process(im_white,im_cv_proccessed,true);
-
-                //std::string path_processed = "/home/ecn/ros2/src/test_projet/img/img_processed_"+std::to_string(count)+".jpg"; //
-                std::string path_processed = "/user/eleves/tcorroenne2021/ros2/src/test_projet/img/img_processed_"+std::to_string(count)+".jpg";
-
-                //RCLCPP_INFO(this->get_logger(), path_processed);
-                //cv::imwrite(path_processed,im_cv_proccessed);
-                //std::string path_cam = "/home/ecn/ros2/src/test_projet/img/img_"+std::to_string(count)+".jpg";
-                //std::string path_cam = "/user/eleves/tcorroenne2021/ros2/src/test_projet/img/img_"+std::to_string(count)+".jpg";
-
-                //cv::imwrite(path_cam,im_cv);
-                count++;
-                std_msgs::msg::Header header;
-                const std::string encoding = "bgr8";
-                auto im_bridge = cv_bridge::CvImage(header,encoding,im_cv_proccessed);
-
-                sensor_msgs::msg::Image message = *im_bridge.toImageMsg();
-                publisher_img->publish(message);
             });
 
             // INIT PUBLISHERS
@@ -129,7 +103,7 @@ public:
         publisher_img = create_publisher<sensor_msgs::msg::Image>("robot/xdisplay", 10);   // topic + QoS
       
             // INIT TIMER      143- the function will be called with the given rate
-        publish_timer = create_wall_timer(1000ms,    // rate
+        publish_timer = create_wall_timer(100ms,    // rate
                                           [&](){pub_image();});
 
     }   
@@ -162,13 +136,40 @@ private:
     void pub_image()
     {
         // use last_msg to build and publish command
-        RCLCPP_INFO(this->get_logger(), "publish:");
-        std::cout<<"publish"<<" _ ";
+        //RCLCPP_INFO(this->get_logger(), "publish:");
+        //std::cout<<"publish"<<" _ ";
         if (im_init){
             //cd.findMainContour(im_cv);
+            cv::Mat im_white;
+            //cv::Ptr<cv::xphoto::WhiteBalancer> wb = cv::xphoto::createSimpleWB();
+            //wb->balanceWhite(im_cv,im_white);
+            im_white = im_cv;
+            cv::Mat im_cv_proccessed;
+            cd.fitCircle();
+            cd.showOutput();
+            cd.process(im_white,im_cv_proccessed,true);
+
+            //std::string path_processed = "/home/ecn/ros2/src/test_projet/img/img_processed_"+std::to_string(count)+".jpg"; //
+            std::string path_processed = "/user/eleves/tcorroenne2021/ros2/src/test_projet/img/img_processed_"+std::to_string(count)+".jpg";
+
+            //RCLCPP_INFO(this->get_logger(), path_processed);
+            //cv::imwrite(path_processed,im_cv_proccessed);
+            //std::string path_cam = "/home/ecn/ros2/src/test_projet/img/img_"+std::to_string(count)+".jpg";
+            //std::string path_cam = "/user/eleves/tcorroenne2021/ros2/src/test_projet/img/img_"+std::to_string(count)+".jpg";
+
+            //cv::imwrite(path_cam,im_cv);
+            count++;
+            std_msgs::msg::Header header;
+            const std::string encoding = "bgr8";
+            auto im_bridge = cv_bridge::CvImage(header,encoding,im_cv_proccessed);
+
+            sensor_msgs::msg::Image message = *im_bridge.toImageMsg();
+            publisher_img->publish(message);
+
             x_c = cd.x();
             y_c = cd.y();
             area = cd.area();
+            std::cout<<"x:"<<x_c<<" y:"<<y_c<<" area:"<<area<<endl;
             create_message_circle(x_c, y_c, area); //put x_c,y_c,area in circle, ready to be published
             publisher->publish(circle);
         }

@@ -74,8 +74,8 @@ public:
     {
         cam = CamParam(px, py, u0, v0);
         // default values for x,y
-        x_ = cam.u0/2;
-        y_ = cam.v0/2;
+        x_ = cam.u0; //Before : /2
+        y_ = cam.v0;
     }
     void setCamera(int width, int height, double field_of_view)
     {
