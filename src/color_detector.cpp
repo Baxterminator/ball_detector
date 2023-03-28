@@ -80,7 +80,7 @@ std::vector<cv::Point> ColorDetector::findMainContour(const cv::Mat &_im)
         {
             cv::imshow("Color detector - range", seg1_);
             if(!show_output_)
-                cv::waitKey(1);
+                cv::waitKey(3);
         }
 
         vector<vector<cv::Point> > contours;
@@ -187,7 +187,7 @@ bool ColorDetector::process(const cv::Mat &_im, cv::Mat &_im_processed, bool wri
     if(show_output_)
     {
         cv::imshow("Color detector output",_im_processed);
-        cv::waitKey(1);
+        cv::waitKey(3);
     }
     return true;
 }

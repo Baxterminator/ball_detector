@@ -18,7 +18,7 @@
   <depend>baxter_core_msgs</depend>
   <depend>cv_bridge</depend>
   <depend>OpenCV</depend>
-
+  <depend>rcl_interfaces</depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>

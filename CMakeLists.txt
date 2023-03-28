@@ -20,6 +20,9 @@ ament_auto_find_build_dependencies()
 ament_auto_add_executable(circle_detector src/circle_detector.cpp src/color_detector.cpp)
 target_include_directories(circle_detector PRIVATE ${OpenCV_INCLUDE_DIRS} include)
 
+ament_auto_add_executable(color_tester src/color_tester.cpp src/color_detector.cpp)
+target_include_directories(color_tester PRIVATE ${OpenCV_INCLUDE_DIRS} include)
+
 #add_executable(circle_detector src/circle_detector.cpp include/ball_detector/color_detector.hpp src/color_detector.cpp)
 
 #add_executable(talker src/publisher_member_function.cpp include/ball_detector/color_detector.hpp src/color_detector.cpp)
