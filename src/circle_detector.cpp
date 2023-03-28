@@ -1,8 +1,5 @@
-// this node has its class fully defined in the cpp file
-// for larger nodes, the class can be classically split in header / source
 
 
-// include any thing required - do not forget to use the .hpp extension for ROS 2 files
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <algorithm>
@@ -14,7 +11,6 @@
 #include <string>
 #include "baxter_core_msgs/msg/camera_settings.hpp"
 #include <sensor_msgs/msg/camera_info.hpp>
-//#include <opencv2/xphoto/white_balance.hpp>
 
 
 
@@ -22,19 +18,10 @@ using namespace std::chrono_literals;
 using namespace ecn;
 using namespace std;
 
-
-// a useful function to get the index of a string in a vector of strings
-inline size_t findIndex(const std::string &name, const std::vector<std::string> & names)
-{
-    const auto elem = std::find(names.begin(), names.end(), name);
-    return std::distance(names.begin(), elem);
-}
-
-
 class CircleDetectorNode : public rclcpp::Node
 {
 public:
-    CircleDetectorNode() : Node("test_node") //ou CircleDetectorNode(rclcpp::NodeOptions options) : Node("test_node", options)
+    CircleDetectorNode() : Node("circle_node") //ou CircleDetectorNode(rclcpp::NodeOptions options) : Node("test_node", options)
     {
         // init whatever is needed for your node
         //init color
@@ -135,9 +122,7 @@ private:
 
     void pub_image()
     {
-        // use last_msg to build and publish command
-        //RCLCPP_INFO(this->get_logger(), "publish:");
-        //std::cout<<"publish"<<" _ ";
+        // use last_msg to build and publish circle and image
         if (im_init){
             //cd.findMainContour(im_cv);
             cv::Mat im_white;
