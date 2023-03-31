@@ -77,5 +77,15 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "core": "cpp"
-    }
+    },
+    "python.analysis.extraPaths": [
+        "/home/ecn/ros2/install/lab_tricolor/lib/python3.8/site-packages",
+        "/home/ecn/ros2/install/image_orchestra/lib/python3.8/site-packages",
+        "/opt/ecn/ros2/install/map_simulator/lib/python3.8/site-packages",
+        "/opt/ecn/ros2/install/baxter_maintenance_msgs/lib/python3.8/site-packages",
+        "/opt/ecn/ros2/install/baxter_core_msgs/lib/python3.8/site-packages",
+        "/opt/ecn/ros2/install/anchor_msgs/lib/python3.8/site-packages",
+        "/opt/ros/foxy/lib/python3.8/site-packages",
+        ""
+    ]
 }

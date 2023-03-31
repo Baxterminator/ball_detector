@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ball_detector_p)
+project(ball_detector)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
@@ -12,8 +12,8 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-ament_auto_add_executable(ball_detector src/ball_detector.cpp src/color_detector.cpp)
-target_include_directories(ball_detector PRIVATE ${OpenCV_INCLUDE_DIRS} include)
+ament_auto_add_executable(ball_detector_ src/ball_detector.cpp src/color_detector.cpp)
+target_include_directories(ball_detector_ PRIVATE ${OpenCV_INCLUDE_DIRS} include)
 
 ament_auto_add_executable(color_tester src/color_tester.cpp src/color_detector.cpp)
 target_include_directories(color_tester PRIVATE ${OpenCV_INCLUDE_DIRS} include)
