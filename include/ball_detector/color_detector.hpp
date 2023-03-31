@@ -102,6 +102,9 @@ public:
     inline double x_p() const {return x_;}
     inline double y_p() const {return y_;}
     inline double area_p() const {return area_;}
+    inline int get_sat(){return sat_;}
+    inline int get_val(){return val_;}
+
     CamParam cam;
 
 protected:    

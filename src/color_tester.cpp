@@ -48,12 +48,9 @@ class ColorTesterNode : public rclcpp::Node
             1,         // QoS
             [this](sensor_msgs::msg::Image::UniquePtr msg)    // callback are perfect for lambdas
             {
-                if(get_im){
-                    last_image = *msg;
-                    //get_im=false;
-                    im_cv = cv_bridge::toCvCopy(last_image, "bgr8")->image;
-                    im_ini=true;
-                }
+                last_image = *msg;
+                im_cv = cv_bridge::toCvCopy(last_image, "bgr8")->image;
+                im_ini=true;
             });
         callback_handle_ = this->add_on_set_parameters_callback(
         std::bind(&ColorTesterNode::parametersCallback, this, std::placeholders::_1));
@@ -67,14 +64,15 @@ class ColorTesterNode : public rclcpp::Node
         if(change_cd&im_ini){
             cd = ColorDetector(r,g,b);
             cd.showSegmentation();
+            cd.setSaturationValue(sat, val);
             cd.showOutput();
             change_cd = false;
             cout<<"new rgb : "<<r<<","<<g<<","<<b<<endl;
-            //cv::namedWindow("read image");
         }
         if(im_ini){
             cd.process(im_cv,im_processed,true);
-
+            sat = cd.get_sat();
+            val = cd.get_val();
         }
 
     }
@@ -84,14 +82,9 @@ class ColorTesterNode : public rclcpp::Node
     string topic_sub_img;
     sensor_msgs::msg::Image last_image;
 
-    //rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber;
-
-
     int r,g,b;
     int sat,val;
 
-
-    bool get_im=true;
     bool change_cd=true;
     bool im_ini=false;
 
@@ -103,8 +96,6 @@ class ColorTesterNode : public rclcpp::Node
     ColorDetector cd;
     rclcpp::TimerBase::SharedPtr timer;
     
-    //std::shared_ptr<rclcpp::ParameterEventHandler> param_subscriber_;
-    //std::shared_ptr<OnSetParametersCallbackHandle> cb_handle_;
     OnSetParametersCallbackHandle::SharedPtr callback_handle_;
 
     rcl_interfaces::msg::SetParametersResult parametersCallback(
