@@ -23,25 +23,29 @@ class CircleDetectorNode : public rclcpp::Node
 public:
     CircleDetectorNode() : Node("circle_node") //ou CircleDetectorNode(rclcpp::NodeOptions options) : Node("test_node", options)
     {
-        // init whatever is needed for your node
-        //init color
-        this->declare_parameter<char>("color", 'r');
-        color = this->get_parameter("color").get_parameter_value().get<char>();
-        if (color=='r'){
-            cd.detectColor(91,30,30);  //detect red (r,g,b) (143,11,14)
-            cd.showSegmentation();
-            cd.setSaturationValue(130,60);  //value determined on real test
-        }
-        else {
-            if(color=='y'){
-                //cd = ColorDetector(255,255,240); //detect yellow
-                //cd.setSaturationValue(50,200);  //value determined on real test
-            }
-        }
+        //init color with 5 parameters (has default values but have to be defined to be useful)
+        this->declare_parameter<int>("r", 130);
+        r = this->get_parameter("r").get_parameter_value().get<int>();
+        this->declare_parameter<int>("g", 30);
+        g = this->get_parameter("g").get_parameter_value().get<int>();
+        this->declare_parameter<int>("b", 30);
+        b = this->get_parameter("b").get_parameter_value().get<int>();
+        this->declare_parameter<int>("sat", 130);
+        sat = this->get_parameter("sat").get_parameter_value().get<int>();
+        this->declare_parameter<int>("val", 95);
+        val = this->get_parameter("val").get_parameter_value().get<int>();
+
+        
+        cd.detectColor(r,g,b);  //detect red (r,g,b) (143,11,14)
+        //cd.showSegmentation(); // only if we want to see the output in a b&w format
+        cd.setSaturationValue(sat,val);  //value determined on real test
+        
 
             // INIT SIDE AND TOPIC
         this->declare_parameter<string>("side", "left");
         side = this->get_parameter("side").get_parameter_value().get<std::string>();
+        this->declare_parameter<string>("topic", "robot/"+side+"/circle");
+        topic_pub_circle = this->get_parameter("topic").get_parameter_value().get<std::string>();
         topic_sub_img = "/cameras/"+side+"_hand_camera/image";
         topic_sub_cam_param = "/cameras/"+side+"_hand_camera/camera_info";
 
@@ -87,7 +91,7 @@ public:
 
             // INIT PUBLISHERS
         publisher = create_publisher<std_msgs::msg::Float32MultiArray>("/robot/"+side+"_circle", 10);   // topic + QoS
-        publisher_img = create_publisher<sensor_msgs::msg::Image>("robot/xdisplay", 10);   // topic + QoS
+        //publisher_img = create_publisher<sensor_msgs::msg::Image>("robot/xdisplay", 10);   // topic + QoS
       
             // INIT TIMER      143- the function will be called with the given rate
         publish_timer = create_wall_timer(100ms,    // rate
@@ -110,7 +114,7 @@ private:
     string side;
 
     rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr publisher;
-    string topic_pub_circle = "robot/"+side+"_circle";
+    string topic_pub_circle;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_img;
     std_msgs::msg::Float32MultiArray circle;
     rclcpp::TimerBase::SharedPtr publish_timer;
@@ -118,7 +122,8 @@ private:
     float y_c;
     float area;
     cv::Mat im_cv;   //used to store the image and process it
-    ColorDetector cd;//=ColorDetector(143,11,14);
+    ColorDetector cd;
+    int r,g,b,sat,val;
 
     void pub_image()
     {
@@ -131,11 +136,11 @@ private:
             im_white = im_cv;
             cv::Mat im_cv_proccessed;
             cd.fitCircle();
-            cd.showOutput();
+            //cd.showOutput();
             cd.process(im_white,im_cv_proccessed,true);
 
             //std::string path_processed = "/home/ecn/ros2/src/test_projet/img/img_processed_"+std::to_string(count)+".jpg"; //
-            std::string path_processed = "/user/eleves/tcorroenne2021/ros2/src/test_projet/img/img_processed_"+std::to_string(count)+".jpg";
+            //std::string path_processed = "/user/eleves/tcorroenne2021/ros2/src/test_projet/img/img_processed_"+std::to_string(count)+".jpg";
 
             //RCLCPP_INFO(this->get_logger(), path_processed);
             //cv::imwrite(path_processed,im_cv_proccessed);
@@ -149,7 +154,7 @@ private:
             auto im_bridge = cv_bridge::CvImage(header,encoding,im_cv_proccessed);
 
             sensor_msgs::msg::Image message = *im_bridge.toImageMsg();
-            publisher_img->publish(message);
+            //publisher_img->publish(message);
 
             x_c = cd.x();
             y_c = cd.y();
