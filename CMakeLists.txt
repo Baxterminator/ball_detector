@@ -12,7 +12,7 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-ament_auto_add_executable(ball_detecctor src/ball_detector.cpp src/color_detector.cpp)
+ament_auto_add_executable(ball_detector src/ball_detector.cpp src/color_detector.cpp)
 target_include_directories(ball_detector PRIVATE ${OpenCV_INCLUDE_DIRS} include)
 
 ament_auto_add_executable(color_tester src/color_tester.cpp src/color_detector.cpp)
